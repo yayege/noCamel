@@ -1,5 +1,4 @@
 
-(* The data-type for Propositional logic *)
 
 type prop = Atom of string
           | Not of prop
@@ -70,8 +69,7 @@ let rec negatives = function
   | _ -> raise (Invalid_argument "Not in NNF form")
 
 
-(* Q1.1: Implement a function: intersection : 'a list -> 'a list -> 'a
-   list
+(*
 
   The returns the intersection of the elements of both lists. That is,
    those elements that are present in both lists at the same time. *)
@@ -98,7 +96,7 @@ let unsat p = taut (Not p)
 let sat p = not (unsat p)
 
 
-(* Some examples *)
+
 
 let nc = Not (And (Atom "P", Not (Atom "P")))
 let nc_taut = taut nc
