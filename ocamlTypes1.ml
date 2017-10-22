@@ -29,10 +29,7 @@ type nnf
   | OrN of nnf * nnf
   | AtomN of signed_atom
 
-(* Q1.2: Write the function nnf that converts propositions into NNF,
-   notice that the typechecker will guide you in your answer as the
-   type forces the result to be in NNF. Your job is to not forget any
-   sub-parts of the proposition in the conversion. *)
+
 let rec to_nnf : prop -> nnf = function
   | Atom a -> AtomN (PosAtom a)
   | Not (Atom a) -> AtomN (NegAtom a)
@@ -42,17 +39,14 @@ let rec to_nnf : prop -> nnf = function
   | And(p, q) -> AndN(to_nnf p, to_nnf q)
   | Or(p, q) -> OrN(to_nnf p, to_nnf q)
 
-(* Q1.3: Write a datatype cnf that represents only propositions in
-   cnf. Hint: You might want to use more than one type to be able to
-   represent sub-expressions.*)
+
 
 type cnf 
   = AndC of cnf * cnf
   | OrC of cnf * cnf 
   | AtomC of signed_atom
 
-(* Q1.4: Write the distribute and nnf_to_cnf functions using the new
-   datatype. Hint: you may need more than one helper function. *)
+
 let rec distribute : cnf * cnf -> cnf = function
   | p, AndC(q, r) -> AndC(distribute(p, q), distribute(p, r))
   | AndC(q, r), p -> AndC(distribute(q, p), distribute(r, p))
@@ -65,8 +59,7 @@ let rec nnf_to_cnf : nnf -> cnf = function
 
 let to_cnf (p :prop) : cnf = nnf_to_cnf (to_nnf p)
 
-(* Q1.5: Write the new positives and negative atoms function as in the
-   previous version *)
+
 let rec positives = function
   | AtomC(PosAtom a) -> [a]
   | AtomC(NegAtom _) -> [] 
@@ -88,7 +81,7 @@ let rec intersection (l1 : 'a list) (l2 : 'a list) : 'a list = match l1 with
   [] -> []
   | h::t -> if (contains h l2) then h::(intersection t l2) else intersection t l2
 
-(* Q1.6: Write the new cnf_tautology function *)
+
 let rec cnf_tautology : cnf -> bool = function
   | AndC(p, q) -> cnf_tautology p && cnf_tautology q
   | p -> ([] = intersection (positives p) (negatives p))
